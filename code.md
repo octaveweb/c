@@ -9,84 +9,97 @@
 struct node {
     int info;
     struct node *link;
-};  
+};
 
-static struct node *first;  
+struct node *first = NULL;
 
 void create() {
     struct node *ptr, *cpt;
     char ch;
     ptr = (struct node *) malloc(sizeof(struct node));
 
+    if (!ptr) {
+        printf("Memory allocation failed\n");
+        return;
+    }
+
     printf("Enter First node Info: ");
     scanf("%d", &ptr->info);
-
+    ptr->link = NULL;
     first = ptr;
 
     do {
         cpt = (struct node *) malloc(sizeof(struct node));
+        if (!cpt) {
+            printf("Memory allocation failed\n");
+            return;
+        }
+
         printf("Give the new node Info: ");
         scanf("%d", &cpt->info);
+        cpt->link = NULL;
         ptr->link = cpt;
         ptr = cpt;
+
         printf("Process y/Y for more: ");
-        getchar(); 
+        getchar(); // consume leftover newline
         scanf("%c", &ch);
 
     } while (ch == 'y' || ch == 'Y');
-    ptr->link = NULL;
 }
 
 void display() {
     struct node *ptr = first;
+    if (first == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    printf("Linked List: ");
     while (ptr != NULL) {
         printf("%d ", ptr->info);
         ptr = ptr->link;
     }
+    printf("\n");
 }
 
-void insertBeginning(){
-    struct node *ptr;
-    ptr = (struct node *) malloc (sizeof(struct node));
+void insertBeginning() {
+    struct node *ptr = (struct node *) malloc(sizeof(struct node));
 
-    if(ptr == NULL){
-        printf("Overflow");
-        exit;
-    }else{
-       if (first->link == NULL){
-       create();
-       }else{
-        printf("\nCreate new node info: ");
-        scanf("%d", &ptr->info);
-        ptr->link = first;
-        first = ptr;
-       }
-       
+    if (ptr == NULL) {
+        printf("Overflow\n");
+        exit(1);
     }
+
+    printf("Create new node info: ");
+    scanf("%d", &ptr->info);
+    ptr->link = first;
+    first = ptr;
 }
 
 int main() {
     int n;
-    printf("\n1. Create \t2. Display \t 3. Insert at Bigining");
-    printf("\nCreate new node info: ");
-    scanf("%d", &n);
-switch (n)
-{
-case 1:
-    create();
-    break;
-    case 2:
-    display();
-    break;
-    case 3:
-    insertBeginning();
-    break;
+    while (1) {
+        printf("\n1. Create \t2. Display \t3. Insert at Beginning \t4. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &n);
 
-default:
-printf("Code Treminetrd!");
-    break;
-}
-    
+        switch (n) {
+            case 1:
+                create();
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                insertBeginning();
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid option\n");
+        }
+    }
     return 0;
 }
 ```
